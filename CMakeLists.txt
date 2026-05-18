@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
-project(DataStructure_C C)
-set(CMAKE_C_STANDARD 11)
+project(DataStructure_C CXX)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(01_Basic_C)
 add_subdirectory(02_SeqList)
