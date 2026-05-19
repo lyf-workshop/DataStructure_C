@@ -29,6 +29,14 @@ Status GetElem_L(LinkList L,int i,ElemType &e) {
     return OK;
 }
 
+Status ListPriorInsert_L(LinkList &P,ElemType &e) {
+    LinkList p = (LinkList)malloc(sizeof(LNode));
+    if (!p) return ERROR;
+    if (!P) return ERROR;
+    
+    return OK;
+}
+
 Status ListInsert_L(LinkList &L,int i,ElemType &e) {
 
     LinkList p = L;
@@ -42,6 +50,7 @@ Status ListInsert_L(LinkList &L,int i,ElemType &e) {
     pnew->data = e;
     pnew->next = p->next;
     p->next = pnew;
+    return OK;
 }
 
 Status ListDelete_L(LinkList &L,int i,ElemType &e) {
@@ -69,6 +78,8 @@ void CreatList_L(LinkList &L,int n) {
         L->next = p;
     }
 }
+
+
 
 int main(void) {
     printf("hello world\n");
