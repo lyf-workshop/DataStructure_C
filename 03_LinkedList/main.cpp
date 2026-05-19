@@ -7,7 +7,7 @@
 #define LIST_INIT_SIZE 100
 #define LIST_INCREMENT 10
 #define ElemType int
-#include <malloc/_malloc.h>
+#include <stdlib.h>
 typedef int Status;
 
 #include <stdio.h>
