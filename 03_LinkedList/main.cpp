@@ -30,10 +30,13 @@ Status GetElem_L(LinkList L,int i,ElemType &e) {
 }
 
 Status ListPriorInsert_L(LinkList &P,ElemType &e) {
+    if (!P) return ERROR;
     LinkList p = (LinkList)malloc(sizeof(LNode));
     if (!p) return ERROR;
-    if (!P) return ERROR;
-    
+    p ->next = P->next;
+    P->next = p;
+    p->data = P->data;
+    P->data = e;
     return OK;
 }
 
