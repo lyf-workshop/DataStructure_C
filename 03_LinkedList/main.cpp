@@ -82,18 +82,44 @@ void CreatList_L(LinkList &L,int n) {
     }
 }
 
-
+void MergeList_L(LinkList &La,LinkList &Lb,LinkList &Lc) {
+    LinkList pa = La->next;
+    LinkList pb = Lb->next;
+    LinkList pc;
+    Lc=pc=La;
+    while (pa&&pb) {
+        if (pa->data <= pb->data) {
+            pc->next = pa;
+            pc = pa;
+            pa = pa->next;
+        }
+        else {
+            pc->next = pb;
+            pc = pb;
+            pb = pb->next;
+        }
+        pc->next =pa?pa:pb;
+        free(Lb);
+    }
+}
 
 int main(void) {
     printf("hello world\n");
-    LinkList L;
-    CreatList_L(L,10);
+    LinkList La;
+    CreatList_L(La,10);
     int i ,j=0;
     for (i=1;i<=10;i++) {
-        GetElem_L(L,i,j);
-        printf("%d\n",j);
+        GetElem_L(La,i,j);
+        printf("%d\t",j);
     }
-
+    LinkList Lb;
+    CreatList_L(Lb,10);
+    LinkList Lc;
+    MergeList_L(La,Lb,Lc);
+    for (i=1;i<=10;i++) {
+        GetElem_L(Lc,i,j);
+        printf("%d\t",j);
+    }
     return 0;
 }
 
