@@ -62,7 +62,7 @@ Status ListDelete_L(LinkList &L,int i,ElemType &e) {
     while (p&&j<i-1) {
         p = p->next;
         j++;
-    }
+    } 
     if (!p->next||j>i-1)return ERROR;
     LinkList q = p->next;
     p->next = q->next;
