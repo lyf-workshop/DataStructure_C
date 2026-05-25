@@ -17,6 +17,50 @@ typedef struct ListNode {
     struct ListNode *next;
 }LNode,*LinkList;
 
+typedef struct DuLNode {
+    ElemType data;
+    struct DuLNode *next;
+    struct DuLNode *prior;
+}DuLNode,*DuLinkList;
+
+Status ListInsert_DuL(DuLinkList &L) {
+    if (!())
+        return ERROR;
+
+}
+
+typedef struct {
+    ElemType data;
+    int cur;
+}component,SLinkList[LIST_INIT_SIZE];
+
+int LocateElem_SL(SLinkList &S,ElemType e) {
+    int i=S[0].cur;
+    while (i&&S[i].data!=e) {
+        i=S[i].cur;
+    }
+    return i;
+}
+
+void InitList_SL(SLinkList &space) {
+    for (int i =0;i<LIST_INIT_SIZE-1;i++) {
+        space[i].cur = i+1;
+    }
+    space[LIST_INIT_SIZE-1].cur = 0;
+}
+
+int Malloc_SL(SLinkList &space) {
+    int i = space[0].cur;
+    if (space[0].cur) {
+        space[0].cur = space[i].cur;
+    }
+}
+
+void Free_SL(SLinkList &space,int k) {
+    space[k].cur = space[0].cur;
+    space[0].cur = k;
+}
+
 Status GetElem_L(LinkList L,int i,ElemType &e) {
     LinkList p = L->next;
     int j=1;
@@ -62,7 +106,7 @@ Status ListDelete_L(LinkList &L,int i,ElemType &e) {
     while (p&&j<i-1) {
         p = p->next;
         j++;
-    } 
+    }
     if (!p->next||j>i-1)return ERROR;
     LinkList q = p->next;
     p->next = q->next;
