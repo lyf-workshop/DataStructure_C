@@ -61,6 +61,13 @@ void Free_SL(SLinkList &space,int k) {
     space[0].cur = k;
 }
 
+void difference(SLinkList &space,int &S) {
+    InitList_SL(space);
+    S = Malloc_SL(space);
+    int r = S;
+    scanf(m,n);
+}
+
 Status GetElem_L(LinkList L,int i,ElemType &e) {
     LinkList p = L->next;
     int j=1;
