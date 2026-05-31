@@ -39,10 +39,8 @@ Status ListInsert_L(LinkList &L, int i, ElemType &e);
 Status ListDelete_L(LinkList &L, int i, ElemType &e);
 
 // 头插法创建含 n 个元素的单链表 L，元素从标准输入读取。
-void CreatList_L(LinkList &L, int n);
+void CreatListPrior_L(LinkList &L, int n);
 
-// 头插法创建含 n 个元素的单链表 L，元素从标准输入读取。
-void CreateList_H(LinkList &L, int n);
 
 // 尾插法创建含 n 个元素的单链表 L，元素从标准输入读取。
 void CreateList_R(LinkList &L, int n);

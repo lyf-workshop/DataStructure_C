@@ -92,8 +92,6 @@ void CreatList_L(LinkList &L, int n) {
     }
 }
 
-void CreateList_H(LinkList &L, int n) {
-}
 
 void CreateList_R(LinkList &L, int n) {
 }
