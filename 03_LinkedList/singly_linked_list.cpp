@@ -81,7 +81,7 @@ Status ListDelete_L(LinkList &L, int i, ElemType &e) {
     return OK;
 }
 
-void CreatList_L(LinkList &L, int n) {
+void CreatListPrior_L(LinkList &L, int n) {
     L = (LinkList)malloc(sizeof(LNode));
     L->next = NULL;
     for (int i = n; i > 0; i--) {

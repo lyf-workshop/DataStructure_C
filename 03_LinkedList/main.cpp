@@ -5,14 +5,14 @@
 int main(void) {
     printf("hello world\n");
     LinkList La;
-    CreatList_L(La,10);
+    CreatListPrior_L(La,10);
     int i, j = 0;
     for (i = 1; i <= 10; i++) {
         GetElem_L(La, i, j);
         printf("%d\t", j);
     }
     LinkList Lb;
-    CreatList_L(Lb,10);
+    CreatListPrior_L(Lb,10);
     LinkList Lc;
     MergeList_L(La,Lb,Lc);
     for (i = 1; i <= 10; i++) {
