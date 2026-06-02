@@ -24,11 +24,25 @@ Status GetTop(SqStack S, SElemType &e) {
 }
 
 Status Push(SqStack &S, SElemType e) {
-
+    if (S.top - S.base >= S.stacksize) {
+        S.base = (SElemType*)realloc(S.base, (S.stacksize+STACKINCREMENT)*sizeof(SElemType));
+        if (!S.base) exit(OVERFLOW);
+        S.top = S.base+S.stacksize;
+        S.stacksize += STACKINCREMENT;
+    }
+    *(S.top++) = e;
+    return OK;
 }
 
-#define ElemType int
+Status Pop(SqStack &S, SElemType &e) {
+    if (S.top = S.base) {
+        e = *--S.top;
+        return OK;
+    }
+}
+
 int main(void) {
+
     return 0;
 }
 
