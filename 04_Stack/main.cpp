@@ -2,7 +2,7 @@
 #define STACK_INIT_SIZE 100
 #define STACKINCREMENT 10
 
-typedef ElemType SElemType;
+typedef char SElemType;
 
 typedef struct {
     SElemType *base;
@@ -75,28 +75,66 @@ Status StackTraverse(SqStack &S,Status (*visit)(SElemType)) {
     return OK;
 }
 
-void conversion() {
+// void conversion() {
+//     SqStack S;
+//     InitStack(S);
+//     int N;
+//     printf("Enter the number of elements you would like to convert: ");
+//     scanf("%d", &N);
+//     while (N) {
+//         Push(S,N%8);
+//         N/=8;
+//     }
+//     int e=0;
+//     while (!StackEmpty(S)) {
+//         Pop(S,e);
+//         printf("%d ",e);
+//     }
+//     DestroyStack(S);
+// }
+
+void BracketMatch() {
     SqStack S;
     InitStack(S);
-    int N;
-    printf("Enter the number of elements you would like to convert: ");
-    scanf("%d", &N);
-    while (N) {
-        Push(S,N%8);
-        N/=8;
+    char str[100];
+    printf("请输入括号表达式：");
+    scanf("%s",str);
+
+    for (int i=0;i<strlen(str);i++) {
+        char ch = str[i];
+        if (ch == '('||ch == '['||ch == '{') {
+            Push(S,ch);
+        }
+        else if (ch == ')'||ch == ']'||ch == '}') {
+            if (StackEmpty(S)) {
+                printf("括号匹配失败：右括号 %c 没有对应的左括号\n", ch);
+                DestroyStack(S);
+                return;
+            }
+            SElemType topElem;
+            Pop(S,topElem);
+            if ((ch == ')'&&topElem !='(')||(ch == ']'&&topElem !='[')||(ch == '}'&&topElem !='{')) {
+                printf("括号匹配失败：%c 和 %c 不匹配\n", topElem, ch);
+                DestroyStack(S);
+                return;
+            }
+
+        }
     }
-    int e=0;
-    while (!StackEmpty(S)) {
-        Pop(S,e);
-        printf("%d ",e);
+    if (StackEmpty(S)) {
+        printf("括号匹配成功\n");
     }
+    else {
+        printf("括号匹配失败：存在多余的左括号\n");
+    }
+
     DestroyStack(S);
+
 }
 
-
-
 int main(void) {
-    conversion();
+    // conversion();
+    BracketMatch();
     return 0;
 }
 
