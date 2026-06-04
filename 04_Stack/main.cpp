@@ -132,9 +132,57 @@ void BracketMatch() {
 
 }
 
+void LineEdit() {
+    SqStack S;
+    InitStack(S);
+
+    char ch;
+
+    while ((ch = getchar()) != EOF) {
+        while (ch != EOF && ch != '\n') {
+            if (ch == '#') {
+                SElemType c;
+
+                if (!StackEmpty(S)) {
+                    Pop(S, c);
+                }
+            }
+            else if (ch == '@') {
+                ClearStack(S);
+            }
+            else {
+                Push(S, ch);
+            }
+
+            ch = getchar();
+        }
+
+
+        SElemType* p = S.base;
+
+        while (p < S.top) {
+            printf("%c", *p);
+            p++;
+        }
+
+        printf("\n");
+        ClearStack(S);
+
+        if (ch == EOF) {
+            break;
+        }
+    }
+
+    DestroyStack(S);
+}
+
+
+
 int main(void) {
     // conversion();
-    BracketMatch();
+    //BracketMatch();
+    LineEdit();
+
     return 0;
 }
 
