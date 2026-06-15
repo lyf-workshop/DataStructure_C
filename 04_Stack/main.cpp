@@ -1,6 +1,7 @@
 ﻿#include "../common/utils.h"
 #define STACK_INIT_SIZE 100
 #define STACKINCREMENT 10
+#define EXPRESSION_MAX_SIZE 200
 
 typedef char SElemType;
 
@@ -44,7 +45,8 @@ Status StackEmpty(SqStack S) {
 }
 
 int StackSize(SqStack S) {
-
+    if (S.base == NULL) return 0;
+    return S.top - S.base;
 }
 
 Status GetTop(SqStack S, SElemType &e) {
@@ -73,6 +75,202 @@ Status Pop(SqStack &S, SElemType &e) {
 
 Status StackTraverse(SqStack &S,Status (*visit)(SElemType)) {
     return OK;
+}
+
+// 判断 ch 是否为操作数，这里支持数字和单个英文字母变量。
+Status IsOperand(SElemType ch) {
+    if (ch >= '0' && ch <= '9') return TRUE;
+    if (ch >= 'a' && ch <= 'z') return TRUE;
+    if (ch >= 'A' && ch <= 'Z') return TRUE;
+    return FALSE;
+}
+
+// 判断 ch 是否为当前支持的四则运算符。
+Status IsOperator(SElemType ch) {
+    if (ch == '+' || ch == '-' || ch == '*' || ch == '/') {
+        return TRUE;
+    }
+    return FALSE;
+}
+
+// 返回运算符优先级，数值越大优先级越高。
+int Priority(SElemType ch) {
+    if (ch == '*' || ch == '/') return 2;
+    if (ch == '+' || ch == '-') return 1;
+    return 0;
+}
+
+// 向后缀表达式数组追加一个字符，并检查是否越界。
+Status AddPostfixChar(char postfix[], int &k, SElemType ch) {
+    if (k >= EXPRESSION_MAX_SIZE - 1) return ERROR;
+    postfix[k++] = ch;
+    return OK;
+}
+
+// 在后缀表达式中添加空格，用于分隔多位数和运算符。
+Status AddPostfixBlank(char postfix[], int &k) {
+    if (k > 0 && postfix[k - 1] != ' ') {
+        return AddPostfixChar(postfix, k, ' ');
+    }
+    return OK;
+}
+
+// 将中缀表达式 infix 转换为后缀表达式 postfix。
+// 算法规则：操作数直接输出，运算符按优先级入栈/出栈，括号控制出栈范围。
+Status InfixToPostfix(const char infix[], char postfix[]) {
+    SqStack S;
+    InitStack(S);
+
+    int i = 0;
+    int k = 0;
+    SElemType ch;
+
+    while (infix[i] != '\0' && infix[i] != '\n') {
+        ch = infix[i];
+
+        // 忽略表达式中的空格和制表符。
+        if (ch == ' ' || ch == '\t') {
+            i++;
+            continue;
+        }
+
+        // 多位整数需要连续读取，整体输出到后缀表达式中。
+        if (ch >= '0' && ch <= '9') {
+            while (infix[i] >= '0' && infix[i] <= '9') {
+                if (AddPostfixChar(postfix, k, infix[i]) == ERROR) {
+                    DestroyStack(S);
+                    return ERROR;
+                }
+                i++;
+            }(())
+            if (AddPostfixBlank(postfix, k) == ERROR) {
+                DestroyStack(S);
+                return ERROR;
+            }
+            continue;
+        }
+
+        // 单个字母变量直接输出，例如 a+b*c。
+        if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) {
+            if (AddPostfixChar(postfix, k, ch) == ERROR ||
+                AddPostfixBlank(postfix, k) == ERROR) {
+                DestroyStack(S);
+                return ERROR;
+            }
+            i++;
+            continue;
+        }
+
+        // 左括号直接入栈，等待右括号触发出栈。
+        if (ch == '(') {
+            Push(S, ch);
+            i++;
+            continue;
+        }
+
+        // 右括号弹出栈中运算符，直到遇到对应的左括号。
+        if (ch == ')') {
+            SElemType topElem;
+            Status foundLeftBracket = FALSE;
+
+            while (!StackEmpty(S)) {
+                Pop(S, topElem);
+                if (topElem == '(') {
+                    foundLeftBracket = TRUE;
+                    break;
+                }
+                if (AddPostfixChar(postfix, k, topElem) == ERROR ||
+                    AddPostfixBlank(postfix, k) == ERROR) {
+                    DestroyStack(S);
+                    return ERROR;
+                }
+            }
+
+            if (!foundLeftBracket) {
+                DestroyStack(S);
+                return ERROR;
+            }
+
+            i++;
+            continue;
+        }
+
+        // 当前运算符优先级低于或等于栈顶运算符时，先弹出栈顶运算符。
+        if (IsOperator(ch)) {
+            SElemType topElem;
+
+            while (!StackEmpty(S)) {
+                GetTop(S, topElem);
+                if (topElem == '(') break;
+
+                if (Priority(topElem) >= Priority(ch)) {
+                    Pop(S, topElem);
+                    if (AddPostfixChar(postfix, k, topElem) == ERROR ||
+                        AddPostfixBlank(postfix, k) == ERROR) {
+                        DestroyStack(S);
+                        return ERROR;
+                    }
+                }
+                else {
+                    break;
+                }
+            }
+
+            Push(S, ch);
+            i++;
+            continue;
+        }
+
+        // 遇到不支持的字符，认为表达式非法。
+        DestroyStack(S);
+        return ERROR;
+    }
+
+    // 表达式扫描完成后，把栈中剩余运算符依次输出。
+    while (!StackEmpty(S)) {
+        SElemType topElem;
+        Pop(S, topElem);
+
+        // 栈中仍有左括号，说明括号不匹配。
+        if (topElem == '(') {
+            DestroyStack(S);
+            return ERROR;
+        }
+
+        if (AddPostfixChar(postfix, k, topElem) == ERROR ||
+            AddPostfixBlank(postfix, k) == ERROR) {
+            DestroyStack(S);
+            return ERROR;
+        }
+    }
+
+    // 去掉最后一个多余空格，并补上字符串结束符。
+    if (k > 0 && postfix[k - 1] == ' ') {
+        k--;
+    }
+    postfix[k] = '\0';
+
+    DestroyStack(S);
+    return OK;
+}
+
+// 从标准输入读取中缀表达式，并输出转换后的后缀表达式。
+void InfixToPostfixTest() {
+    char infix[EXPRESSION_MAX_SIZE];
+    char postfix[EXPRESSION_MAX_SIZE];
+
+    printf("请输入中缀表达式：");
+    if (fgets(infix, EXPRESSION_MAX_SIZE, stdin) == NULL) {
+        printf("输入失败\n");
+        return;
+    }
+
+    if (InfixToPostfix(infix, postfix) == OK) {
+        printf("后缀表达式：%s\n", postfix);
+    }
+    else {
+        printf("表达式转换失败\n");
+    }
 }
 
 // void conversion() {
@@ -181,8 +379,8 @@ void LineEdit() {
 int main(void) {
     // conversion();
     //BracketMatch();
-    LineEdit();
+    //LineEdit();
+    InfixToPostfixTest();
 
     return 0;
 }
-

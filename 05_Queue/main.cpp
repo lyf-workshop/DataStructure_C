@@ -1,5 +1,4 @@
 ﻿#include "../common/utils.h"
-#include <stdio.h>
 
 typedef char QElemType;
 
@@ -13,7 +12,7 @@ typedef struct {
     QueuePtr rear;
 }LinkQueue;
 
-Status initQueue(LinkQueue &Q) {
+Status InitQueue(LinkQueue &Q) {
     Q.front = Q.rear = (QueuePtr)malloc(sizeof(QNode));
     if (!Q.front) exit(OVERFLOW);
     Q.front->next = NULL;
@@ -84,5 +83,6 @@ Status DeSqQueue(SqQueue &Q, QElemType &e) {
 }
 
 int main(void) {
+
     return 0;
 }
